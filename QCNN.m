@@ -6,13 +6,16 @@ tic
 N = 9; % Number of qubits
 d = 8; % Dimensions of Gell-Mann matrices
 
-px = 0.058;
-py = 0.02;
-pz = 0.02;
-pxx = 0.002;
+px = 0.006;
+py = 0.002;
+pz = 0.002;
+%pxx = 0.002;
 
 epsilon = 1E-4; % Step for finite-difference method
 eta = 10; % Learning rate
+
+batch_size = 1000;
+iters = 100; % Number of iterations for gradient descent
 
 %%
 
@@ -36,37 +39,8 @@ plus_z = [1; 0];
 minus_z = [0; 1];
 
 state = plus_x; % Change as necessary
-
 %%
 
-iters = 100;
-
-fid_per_iter = zeros(1, iters);
-
-for i = 1:iters
-
-    fidelity_initial = Fidelity(d, C1, Permute, N, px, py, pz, pxx, state);
-
-    fidelity_plus = Fidelity(d, C1 + epsilon, Permute, N, px, py, pz, pxx, state);
-
-    fidelity_minus = Fidelity(d, C1 - epsilon, Permute, N, px, py, pz, pxx, state);
-
-    dfdc = (1 / (2 * epsilon)) * (fidelity_plus - fidelity_minus);
-
-    C1_update = C1 + eta * dfdc;
-
-    fidelity_current = Fidelity(d, C1_update, Permute, N, px, py, pz, pxx, state);
-
-    if (fidelity_current - fidelity_initial) > 0
-        eta = eta - 0.05 * eta;
-        C1 = C1_update;
-    elseif (fidelity_current - fidelity_initial) < 0
-        eta = eta + 0.5 * eta;
-        C1_update = 0;
-    end
-    
-    fid_per_iter(i) = fidelity_current;
-    
-end
+fidelity_current = Optimize(d, epsilon, eta, C1, Permute, N, px, py, pz, batch_size, iters, state);
 
 toc
