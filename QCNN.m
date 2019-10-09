@@ -6,16 +6,16 @@ tic
 N = 9; % Number of qubits
 d = 8; % Dimensions of Gell-Mann matrices
 
-px = 0.006;
-py = 0.002;
-pz = 0.002;
+px = 0.06;
+py = 0.02;
+pz = 0.02;
 %pxx = 0.002;
 
 epsilon = 1E-4; % Step for finite-difference method
 eta = 10; % Learning rate
 
-batch_size = 1000;
-iters = 100; % Number of iterations for gradient descent
+batch_size = 1000; % Number of passes through error channel
+iters = 10; % Number of iterations for gradient descent
 
 %%
 
@@ -41,6 +41,6 @@ minus_z = [0; 1];
 state = plus_x; % Change as necessary
 %%
 
-fidelity_current = Optimize(d, epsilon, eta, C1, Permute, N, px, py, pz, batch_size, iters, state);
+[fidelity, eta] = Optimize(d, epsilon, eta, C1, Permute, N, px, py, pz, batch_size, iters, state);
 
 toc
