@@ -1,4 +1,4 @@
-function [dfdc] = FiniteDifference(d, epsilon, C, Permute, N, px, py, pz, batch_size, state)
+function [df_dc] = FiniteDifference(d, epsilon, C, Permute, N, px, py, pz, batch_size, state)
 
 C = permute(C, [3 1 2]);
 
@@ -22,4 +22,4 @@ for i = 1:length(C)
 
 end
 
-dfdc = (1 / (2 * epsilon)) * (fidelity_plus - fidelity_minus);
+df_dc = (1 / (2 * epsilon)) * (fidelity_plus - fidelity_minus);
